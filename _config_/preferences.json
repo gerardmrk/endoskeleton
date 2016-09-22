@@ -17,6 +17,7 @@
     "APP_ENTRYPOINT": "app/index.js",
     "APP_CONTAINERS": "app/containers",
     "APP_COMPONENTS": "app/components",
+    "APP_ROUTES": "app/routes",
     "APP_ACTIONS": "app/actions",
     "APP_REDUCERS": "app/reducers",
     "APP_UTILITIES": "app/utilities",
@@ -36,13 +37,13 @@
     {
       "name": "Home",
       "pattern": "/",
-      "exact": true,
+      "exactly": true,
       "description": "Home Page"
     },
     {
       "name": "About",
-      "pattern": "/",
-      "exact": false,
+      "pattern": "/about",
+      "exactly": false,
       "description": "About Page"
     }
   ]

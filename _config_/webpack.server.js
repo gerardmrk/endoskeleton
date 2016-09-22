@@ -51,9 +51,8 @@ const config = {
     rules: [
       {
         test: /\.json$/,
-        include: [PATHS.APP],
         exclude: [PATHS.NODE_MODULES],
-        loader: 'babel-loader'
+        loader: 'json-loader'
       },
       {
         test: /\.jsx?$/,
@@ -119,8 +118,10 @@ const config = {
     extensions: ['.js', '.jsx', '.json', '.css'],
     enforceExtension: false,
     alias: {
+      configs: PATHS.CONFIGS,
       components: PATHS.APP_COMPONENTS,
       containers: PATHS.APP_CONTAINERS,
+      routes: PATHS.APP_ROUTES,
       actions: PATHS.APP_ACTIONS,
       reducers: PATHS.APP_REDUCERS,
       utilities: PATHS.APP_UTILITIES
