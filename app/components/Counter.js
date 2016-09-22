@@ -23,8 +23,7 @@ export default class Counter extends Component {
   render () {
     return (
       <div>
-        <h4>XDXD ye</h4>
-        <h2>Counter: {this.state.counter}</h2>
+        <h2>Time Elapsed: {this.state.counter}</h2>
       </div>
    )
   }

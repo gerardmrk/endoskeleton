@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <% if (process.env.NODE_ENV === 'production') { %>
+    <meta http-equiv="Content-Security-Policy" content="<%- htmlWebpackPlugin.options['CSP'] %>" />
+    <base href="<%= htmlWebpackPlugin.options['DOMAIN_NAME'] %>" />
+    <% } %>
+    <meta name="url" content={{PageCanonicalURL}} />
+    <meta name="description" content="{{PageDescription}}" />
+    <meta name="abstract" content="{{PageDescription}}" />
+    <meta name="rating" content="{{PageRating}}" />
+
+    <meta name="robots" content="index,follow,noodp" />
+    <meta name="googlebot" content="index,follow" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="format-detection" content="email=yes" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="date=no" />
+    <meta name="format-detection" content="address=no" />
+    <meta name="google" content="nositelinkssearchbox" />
+
+    <meta name="google-site-verification" content="<%= htmlWebpackPlugin.options['GOOGLE_SEARCH_CONSOLE_TOKEN'] %>" />
+    <meta property="fb:app_id" content="<%= htmlWebpackPlugin.options['FACEBOOK_APP_ID'] %>" />
+
+    <meta property="og:url" content="{{PageCanonicalURL}}" />
+    <meta property="og:type" content="{{PageType}}" />
+    <meta property="og:title" content="{{PageTitle}}" />
+    <meta property="og:image" content="{{PageImageURL}}" />
+    <meta property="og:image:width" content="{{PageImageWidth}}" />
+    <meta property="og:image:height" content="{{PageImageHeight}}" />
+    <meta property="og:description" content="{{PageDescription}}" />
+    <meta property="og:site_name" content="<%= htmlWebpackPlugin.options['APP_NAME'] %>" />
+    <meta property="og:locale" content="en_US" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@<%= htmlWebpackPlugin.options['APP_TWITTER_HANDLE'] %>" />
+    <meta name="twitter:creator" content="@<%= htmlWebpackPlugin.options['SELF_TWITTER_HANDLE'] %>" />
+    <meta name="twitter:url" content="{{PageCanonicalURL}}">
+    <meta name="twitter:title" content="{{PageTitle}}" />
+    <meta name="twitter:description" content="{{PageDescription}}" />
+    <meta name="twitter:image" content="{{PageImageURL}}" />
+
+    <meta itemprop="name" content="{{PageTitle}}" />
+    <meta itemprop="description" content="{{PageDescription}}" />
+    <meta itemprop="image" content="{{PageImageURL}}" />
+
+    <title>{{PageTitle}} - <%= htmlWebpackPlugin.options['APP_NAME'] %></title>
+
+    <%= require('html!./loadcss.html') %>
+    <%= require('html!./css_rel_preload.html') %>
+
+    <link href="humans.txt" rel="author" />
+    <link href="{{PageCanonicalURL}}" rel="canonical" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous" />
+
+    <%= require('html!./inline_style.html') %>
+
+    <% if (process.env.NODE_ENV === 'production') { %>
+    <% htmlWebpackPlugin.files.css.forEach(file => { %>
+    <link rel="preload" href="<%= file %>" as="style" onload="this.rel='stylesheet'" />
+    <% }) %>
+    <noscript>
+      <% htmlWebpackPlugin.files.css.forEach(file => { %>
+      <link rel="stylesheet" href="<%= file %>" />
+      <% }) %>
+    </noscript>
+    <% } %>
+  </head>
+  <body>
+    <div id="app"></div>
+    <% htmlWebpackPlugin.files.js.forEach(file => { %>
+    <script src="<%= file %>"></script>
+    <% }) %>
+  </body>
+</html>

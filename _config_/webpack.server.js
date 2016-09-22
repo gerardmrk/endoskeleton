@@ -22,7 +22,7 @@ try {
   console.error(err)
 }
 
-const { PATHS, PSEUDO_PATHS, DEV } = PREFS
+const { GENERAL, PATHS, PSEUDO_PATHS, DEV } = PREFS
 const { HMR_HOST, HMR_PORT } = DEV
 const {
   CLIENT_BUNDLE_NAME,
@@ -46,8 +46,6 @@ const config = {
     path: PATHS.DISTRIBUTION,
     publicPath: RELATIVE_PUBLICPATH
   },
-
-  devtool: 'inline-source-map',
 
   module: {
     rules: [
@@ -99,10 +97,20 @@ const config = {
   plugins: [
     new Webpack.HotModuleReplacementPlugin(),
     new Webpack.NamedModulesPlugin(),
-    new HtmlPlugin(Object.assign({}, {
+    new HtmlPlugin(Object.assign(GENERAL, {
+      cache: true,
+      inject: false,
+      favicon: `${PATHS.CONFIGS}/build_assets/favicon.ico`,
+      template: `${PATHS.CONFIGS}/templates/index_template.html`,
       filename: `${PATHS[CLIENT_HTML_LOCATION]}/${CLIENT_HTML_FILENAME}`,
-      template: `${PATHS.CONFIGS}/templates/index_template.ejs`,
-      inject: false
+      minify: {
+        minifyCSS: true,
+        minifyJS: true,
+        removeComments: true,
+        keepClosingSlash: true,
+        preserveLineBreaks: false,
+        collapseWhitespace: false
+      }
     }))
   ],
 
@@ -117,7 +125,11 @@ const config = {
       reducers: PATHS.APP_REDUCERS,
       utilities: PATHS.APP_UTILITIES
     }
-  }
+  },
+
+  devtool: 'inline-source-map',
+
+  target: 'web'
 }
 
 const server = new WebpackDevServer(Webpack(config), {

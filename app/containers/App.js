@@ -5,10 +5,8 @@ import Counter from 'components/Counter'
 
 const App = () => (
   <div className={styles.app}>
-    <h2>Hello, WORLD wewlad xd basegod</h2>
+    <h1>I am feeling alright</h1>
     <Counter />
-    <p>I saw the devil wowwwwww DANK</p>
-    <p>I saw the devil wowwwwww DANK</p>
   </div>
 )
 
