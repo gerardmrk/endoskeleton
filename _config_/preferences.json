@@ -9,19 +9,28 @@
     "SELF_TWITTER_HANDLE": "gerard_mrk"
   },
   "DEV": {
-    "HMR_HOST": "localhost",
-    "HMR_PORT": "8080"
+    "HMR_HOST": "0.0.0.0",
+    "HMR_PORT": "4200"
   },
   "PATHS": {
     "APP": "app",
     "APP_ENTRYPOINT": "app/index.js",
+    "APP_CONTAINERS": "app/containers",
+    "APP_COMPONENTS": "app/components",
+    "APP_ACTIONS": "app/actions",
+    "APP_REDUCERS": "app/reducers",
+    "APP_UTILITIES": "app/utilities",
     "SERVER": "server",
     "NODE_MODULES": "node_modules",
     "DISTRIBUTION": "dist",
-    "CONFIGS": "_config_"
+    "CONFIGS": "_config_",
+    "NPM_CONFIG": "package.json"
   },
-  "RELATIVE_PATHS": {
-    "ASSETS": "assets"
+  "PSEUDO_PATHS": {
+    "RELATIVE_PUBLICPATH": "/",
+    "CLIENT_BUNDLE_NAME": "[name].js",
+    "CLIENT_HTML_FILENAME": "index.html",
+    "CLIENT_HTML_LOCATION": "DISTRIBUTION"
   },
   "ROUTES": [
     {
