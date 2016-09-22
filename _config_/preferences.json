@@ -1,0 +1,40 @@
+{
+  "GENERAL": {
+    "APP_NAME": "Sleepless",
+    "DOMAIN_NAME": "http://sleepless.space/",
+    "CSP": "default-src 'self' 'unsafe-inline' http://sleepless.space cdnjs.cloudflare.com maxcdn.bootstrapcdn.com *.googleapis.com *.gstatic.com; img-src 'self' 'unsafe-inline' data:;",
+    "GG_SEARCH_CONSOLE_TOKEN": "EkdURsID0oeb4LeHHoI37QOn4DGLAf9URMz1Vuh4aHg",
+    "FB_APP_ID": "1789742834600188",
+    "APP_TWITTER_HANDLE": "likeihaveonelol",
+    "SELF_TWITTER_HANDLE": "gerard_mrk"
+  },
+  "DEV": {
+    "HMR_HOST": "localhost",
+    "HMR_PORT": "8080"
+  },
+  "PATHS": {
+    "APP": "app",
+    "APP_ENTRYPOINT": "app/index.js",
+    "SERVER": "server",
+    "NODE_MODULES": "node_modules",
+    "DISTRIBUTION": "dist",
+    "CONFIGS": "_config_"
+  },
+  "RELATIVE_PATHS": {
+    "ASSETS": "assets"
+  },
+  "ROUTES": [
+    {
+      "name": "Home",
+      "pattern": "/",
+      "exact": true,
+      "description": "Home Page"
+    },
+    {
+      "name": "About",
+      "pattern": "/",
+      "exact": false,
+      "description": "About Page"
+    }
+  ]
+}
