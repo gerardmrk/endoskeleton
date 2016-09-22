@@ -20,6 +20,7 @@
     "APP_ROUTES": "app/routes",
     "APP_ACTIONS": "app/actions",
     "APP_REDUCERS": "app/reducers",
+    "APP_STORE": "app/store",
     "APP_UTILITIES": "app/utilities",
     "SERVER": "server",
     "NODE_MODULES": "node_modules",

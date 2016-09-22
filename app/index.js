@@ -1,8 +1,20 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
 import { AppContainer } from 'react-hot-loader'
+import thunk from 'redux-thunk'
 
 import App from 'containers/App'
+import configureStore from 'store'
+import immutalize from 'utilities/immutalize'
+
+const storeWithMiddleware = configureStore([thunk])
+
+const stateFromServer = window.__INITIAL_STATE__
+
+const initialState = stateFromServer ? immutalize(stateFromServer) : undefined
+
+const appStore = storeWithMiddleware(initialState)
 
 if (process.env.NODE_ENV !== 'production') {
   const { whyDidYouUpdate } = require('why-did-you-update')
@@ -12,7 +24,9 @@ if (process.env.NODE_ENV !== 'production') {
 const render = () => {
   ReactDOM.render(
     <AppContainer>
-      <App />
+      <Provider store={appStore}>
+        <App />
+      </Provider>
     </AppContainer>,
     document.getElementById('app')
   )

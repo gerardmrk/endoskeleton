@@ -3,7 +3,7 @@ import { ROUTES } from 'configs/preferences'
 import Home from 'containers/Home'
 import About from 'containers/About'
 
-const mappings = {
+const componentMappings = {
   'Home': Home,
   'About': About
 }
@@ -11,7 +11,7 @@ const mappings = {
 const routes = ROUTES.map(route => {
   return {
     ...route,
-    component: mappings[route.name]
+    component: componentMappings[route.name]
   }
 })
 

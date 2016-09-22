@@ -124,6 +124,7 @@ const config = {
       routes: PATHS.APP_ROUTES,
       actions: PATHS.APP_ACTIONS,
       reducers: PATHS.APP_REDUCERS,
+      store: PATHS.APP_STORE,
       utilities: PATHS.APP_UTILITIES
     }
   },

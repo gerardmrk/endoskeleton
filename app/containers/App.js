@@ -29,7 +29,7 @@ const MatchRecursive = route => (
     exactly={route.exactly}
     pattern={route.pattern}
     render={props => (
-      <route.component {...props} routes={routes.routes} />
+      <route.component {...props} routes={route.routes} />
     )}
   />
 )
