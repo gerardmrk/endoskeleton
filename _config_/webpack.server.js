@@ -8,10 +8,10 @@ const HtmlPlugin = require('html-webpack-plugin')
 let PREFS
 
 try {
-  // NON-DYNAMIC [START]
+  // #@! - static - [START]
   const rootPath = resolve(__dirname, '..')
   PREFS = JSON.parse(readFileSync(`${rootPath}/_config_/preferences.json`, 'utf8'))
-  // NON-DYNAMIC [END]
+  // #@! - static - [END]
 
   Object.keys(PREFS.PATHS).forEach(pathname => {
     const path = PREFS.PATHS[pathname]
@@ -27,8 +27,7 @@ const { HMR_HOST, HMR_PORT } = DEV
 const {
   CLIENT_BUNDLE_NAME,
   CLIENT_HTML_FILENAME,
-  CLIENT_HTML_LOCATION,
-  RELATIVE_PUBLICPATH
+  CLIENT_HTML_FROM_PATHS
 } = PSEUDO_PATHS
 
 const HMR_ADDR = `http://${HMR_HOST}:${HMR_PORT}`
@@ -44,7 +43,7 @@ const config = {
   output: {
     filename: CLIENT_BUNDLE_NAME,
     path: PATHS.DISTRIBUTION,
-    publicPath: RELATIVE_PUBLICPATH
+    publicPath: '/'
   },
 
   module: {
@@ -101,7 +100,7 @@ const config = {
       inject: false,
       favicon: `${PATHS.CONFIGS}/build_assets/favicon.ico`,
       template: `${PATHS.CONFIGS}/templates/index_template.html`,
-      filename: `${PATHS[CLIENT_HTML_LOCATION]}/${CLIENT_HTML_FILENAME}`,
+      filename: `${PATHS[CLIENT_HTML_FROM_PATHS]}/${CLIENT_HTML_FILENAME}`,
       minify: {
         minifyCSS: true,
         minifyJS: true,
@@ -135,11 +134,13 @@ const config = {
 }
 
 const server = new WebpackDevServer(Webpack(config), {
+  stats: { colors: true },
   host: HMR_HOST,
   port: HMR_PORT,
   hot: true,
   contentBase: PATHS.DISTRIBUTION,
-  publicPath: RELATIVE_PUBLICPATH
+  publicPath: config.output.publicPath,
+  historyApiFallback: true
 })
 
 server.listen(HMR_PORT, HMR_HOST, (err, result) => {

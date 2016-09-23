@@ -8,11 +8,6 @@
     <meta http-equiv="Content-Security-Policy" content="<%- htmlWebpackPlugin.options['CSP'] %>" />
     <base href="<%= htmlWebpackPlugin.options['DOMAIN_NAME'] %>" />
     <% } %>
-    <meta name="url" content={{PageCanonicalURL}} />
-    <meta name="description" content="{{PageDescription}}" />
-    <meta name="abstract" content="{{PageDescription}}" />
-    <meta name="rating" content="{{PageRating}}" />
-
     <meta name="robots" content="index,follow,noodp" />
     <meta name="googlebot" content="index,follow" />
     <meta name="referrer" content="no-referrer" />
@@ -24,36 +19,14 @@
 
     <meta name="google-site-verification" content="<%= htmlWebpackPlugin.options['GOOGLE_SEARCH_CONSOLE_TOKEN'] %>" />
     <meta property="fb:app_id" content="<%= htmlWebpackPlugin.options['FACEBOOK_APP_ID'] %>" />
-
-    <meta property="og:url" content="{{PageCanonicalURL}}" />
-    <meta property="og:type" content="{{PageType}}" />
-    <meta property="og:title" content="{{PageTitle}}" />
-    <meta property="og:image" content="{{PageImageURL}}" />
-    <meta property="og:image:width" content="{{PageImageWidth}}" />
-    <meta property="og:image:height" content="{{PageImageHeight}}" />
-    <meta property="og:description" content="{{PageDescription}}" />
     <meta property="og:site_name" content="<%= htmlWebpackPlugin.options['APP_NAME'] %>" />
-    <meta property="og:locale" content="en_US" />
-
-    <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@<%= htmlWebpackPlugin.options['APP_TWITTER_HANDLE'] %>" />
     <meta name="twitter:creator" content="@<%= htmlWebpackPlugin.options['SELF_TWITTER_HANDLE'] %>" />
-    <meta name="twitter:url" content="{{PageCanonicalURL}}">
-    <meta name="twitter:title" content="{{PageTitle}}" />
-    <meta name="twitter:description" content="{{PageDescription}}" />
-    <meta name="twitter:image" content="{{PageImageURL}}" />
-
-    <meta itemprop="name" content="{{PageTitle}}" />
-    <meta itemprop="description" content="{{PageDescription}}" />
-    <meta itemprop="image" content="{{PageImageURL}}" />
-
-    <title>{{PageTitle}} - <%= htmlWebpackPlugin.options['APP_NAME'] %></title>
 
     <%= require('html!./loadcss.html') %>
     <%= require('html!./css_rel_preload.html') %>
 
     <link href="humans.txt" rel="author" />
-    <link href="{{PageCanonicalURL}}" rel="canonical" />
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" />
@@ -73,7 +46,12 @@
     <% } %>
   </head>
   <body>
+    <% if (process.env.NODE_ENV === 'production') { %>
+    <div id="app">{{{Body}}}</div>
+    <script>window.__INITIAL_STATE__ = {{{initialState}}}</script>
+    <% } else { %>
     <div id="app"></div>
+    <% } %>
     <% htmlWebpackPlugin.files.js.forEach(file => { %>
     <script src="<%= file %>"></script>
     <% }) %>

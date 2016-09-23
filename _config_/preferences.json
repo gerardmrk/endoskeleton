@@ -1,7 +1,11 @@
 {
   "GENERAL": {
     "APP_NAME": "Sleepless",
-    "DOMAIN_NAME": "http://sleepless.space/",
+    "DOMAIN_NAME": "https://sleepless.space",
+    "TITLE_FORMAT": "%s - Sleepless",
+    "HEADER_IMG_URL" : "https://sleepless.space/assets/images/sleepless.png",
+    "HEADER_IMG_WIDTH": "300",
+    "HEADER_IMG_HEIGHT": "300",
     "CSP": "default-src 'self' 'unsafe-inline' cdnjs.cloudflare.com maxcdn.bootstrapcdn.com *.googleapis.com *.gstatic.com; img-src 'self' 'unsafe-inline' data:;",
     "GOOGLE_SEARCH_CONSOLE_TOKEN": "EkdURsID0oeb4LeHHoI37QOn4DGLAf9URMz1Vuh4aHg",
     "FACEBOOK_APP_ID": "1789742834600188",
@@ -10,7 +14,9 @@
   },
   "DEV": {
     "HMR_HOST": "0.0.0.0",
-    "HMR_PORT": "4200"
+    "HMR_PORT": "3222",
+    "MOCK_HOST": "127.0.0.1",
+    "MOCK_PORT": "4200"
   },
   "PATHS": {
     "APP": "app",
@@ -29,23 +35,24 @@
     "NPM_CONFIG": "package.json"
   },
   "PSEUDO_PATHS": {
-    "RELATIVE_PUBLICPATH": "/",
+    "RELATIVE_PUBLICPATH": "/assets",
     "CLIENT_BUNDLE_NAME": "[name].js",
     "CLIENT_HTML_FILENAME": "index.html",
-    "CLIENT_HTML_LOCATION": "DISTRIBUTION"
+    "CLIENT_HTML_FROM_PATHS": "DISTRIBUTION",
+    "CLIENT_HTML_FROM_DISTRIBUTION": "./index.html"
   },
-  "ROUTES": [
-    {
-      "name": "Home",
+  "ROUTES": {
+    "Home": {
+      "title": "Home",
       "pattern": "/",
       "exactly": true,
       "description": "Home Page"
     },
-    {
-      "name": "About",
+    "About": {
+      "title": "About",
       "pattern": "/about",
       "exactly": false,
       "description": "About Page"
     }
-  ]
+  }
 }

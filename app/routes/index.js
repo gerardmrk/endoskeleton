@@ -3,15 +3,17 @@ import { ROUTES } from 'configs/preferences'
 import Home from 'containers/Home'
 import About from 'containers/About'
 
+// #@! - static - [START]
 const componentMappings = {
   'Home': Home,
   'About': About
 }
+// #@! - static - [END]
 
-const routes = ROUTES.map(route => {
+const routes = Object.keys(ROUTES).map(routeName => {
   return {
-    ...route,
-    component: componentMappings[route.name]
+    ...ROUTES[routeName],
+    component: componentMappings[routeName]
   }
 })
 

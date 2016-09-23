@@ -16,7 +16,7 @@ const initialState = stateFromServer ? immutalize(stateFromServer) : undefined
 
 const appStore = storeWithMiddleware(initialState)
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.DEV_STAGE === 'optimize') {
   const { whyDidYouUpdate } = require('why-did-you-update')
   whyDidYouUpdate(React)
 }
