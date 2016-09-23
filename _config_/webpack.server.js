@@ -3,6 +3,9 @@ const { resolve } = require('path')
 const Webpack = require('webpack')
 const WebpackDevServer = require('webpack-dev-server')
 const HtmlPlugin = require('html-webpack-plugin')
+const precss = require('precss')
+const rucksack = require('rucksack-css')
+const postcssMath = require('postcss-math')
 
 const parsePreferences = require('./helpers/parsePreferences')
 
@@ -24,6 +27,8 @@ const MAPPED_ALIASES = {}
 ALIASES.forEach(rel => { MAPPED_ALIASES[rel[0]] = PATHS[rel[1]] })
 
 const config = {
+  context: PATHS.ROOT,
+
   entry: [
     'babel-polyfill',
     'react-hot-loader/patch',
@@ -61,18 +66,17 @@ const config = {
         test: /\.css$/,
         include: [PATHS.APP],
         exclude: [PATHS.NODE_MODULES],
-        use: [
+        loaders: [
           { loader: 'style-loader' },
           {
             loader: 'css-loader',
-            options: {
+            query: {
               modules: true,
-              importLoaders: 2,
+              importLoaders: 1,
               localIdentName: '[name]__[local]__[hash:base64:7]'
             }
           },
-          { loader: 'postcss-loader' },
-          { loader: 'sass-loader' }
+          { loader: 'postcss-loader' }
         ]
       },
       {
@@ -105,7 +109,22 @@ const config = {
         preserveLineBreaks: false,
         collapseWhitespace: false
       }
-    }))
+    })),
+    new Webpack.LoaderOptionsPlugin({
+      debug: true,
+      minimize: false,
+      options: {
+        context: process.cwd(),
+        postcss: [
+          precss,
+          postcssMath,
+          rucksack({
+            fallbacks: true,
+            autoprefixer: { browsers: 'last 3 versions' }
+          })
+        ]
+      }
+    })
   ],
 
   resolve: {

@@ -1,62 +1,12 @@
-$star-number: 100;
-$current-stars: ;
-
-@keyframes northern {
-  0% { transform: translate(5%, -2%); }
-  25% { transform: translate(10%, 7%); }
-  40% { transform: rotate(-10deg); }
-  60% { transform: translate(7%, -2%); }
-  85% { transform: translate(6%, 3%) rotate(12deg); }
-  100% { transform: none; }
-}
-
 .main {
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
-  position: relative;
-  z-index: 0;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-  &> * {
-    position: relative;
-    z-index: 1;
-  }
-}
-
-.auroralNorthern {
-  position: absolute;
-  left: -50%;
-  top: -50%;
-  width: 200%;
-  height: 200%;
-  animation-name: northern;
-  animation-duration: 10s;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
-  background: linear-gradient(10deg, #a1d9b4 20%, #32988a 40%, #000e3c 70%);
-}
-
-.auroralStars {
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: block;
-  width: 1px;
-  height: 1px;
-  border-radius: 50%;
-  background: white;
-
-  @while $star-number > 0 {
-    $current-stars: $current-stars
-                    + (random(100) +vw) (random(50) +vh) 0 (random(2) +px) rgba(255,255,255,.7)
-                    + unquote(", ");
-    @if $star-number == 1 {
-      $current-stars: $current-stars
-                      + (random(100) +vw) (random(50) +vh) 0 0 rgba(255,255,255,.9);
-      box-shadow: $current-stars;
-    }
-    $star-number: $star-number - 1;
+  h3 {
+    color: #fff;
   }
 }

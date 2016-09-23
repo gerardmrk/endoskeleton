@@ -56,9 +56,10 @@
     "CLIENT_HTML_FROM_DISTRIBUTION": "./index"
   },
   "VENDORS": {
-    "ReactGroup": ["react", "react-dom", "react-router", "react-helmet"],
-    "ReduxGroup": ["redux", "redux-logger", "redux-thunk", "react-redux"],
-    "OtherGroup": ["ramda", "immutable"]
+    "all": ["react", "react-dom", "react-router", "react-helmet", "redux", "redux-logger", "redux-thunk", "react-redux", "ramda", "immutable"],
+    "reactGroup": ["react", "react-dom", "react-router", "react-helmet"],
+    "reduxGroup": ["redux", "redux-logger", "redux-thunk", "react-redux"],
+    "otherGroup": ["ramda", "immutable"]
   },
   "ROUTES": {
     "Home": {

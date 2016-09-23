@@ -1,4 +1,15 @@
+@import '../../main.css';
+
 .main {
   width: 100vw;
-  max-height: 100vh;
+  height: 100vh;
+  color: #fff;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heading {
+  @mixin fp width, 200, 720;
 }

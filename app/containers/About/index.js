@@ -4,16 +4,26 @@ import { connect } from 'react-redux'
 import styles from './styles.css'
 import getHeaderTags from 'utilities/getHeaderTags'
 import sleeplessSVG from './sleepless.svg'
+import background from './grey.jpeg'
 
 class About extends Component {
   render () {
     const headerTags = getHeaderTags('About')
     return (
-      <div className={styles.main}>
+      <div
+        className={styles.main}
+        style={{
+          background: `url(${background})`,
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+          backgroundSize: 'cover'
+        }}
+      >
         {headerTags}
-        <div className={styles.auroralNorthern} />
-        <div className={styles.auroralStars} />
-        <img src={sleeplessSVG} alt='a word' />
+        <div>
+          <img src={sleeplessSVG} alt='a word' />
+          <h3>The trick, William Potter, is not minding that it hurts.</h3>
+        </div>
       </div>
     )
   }

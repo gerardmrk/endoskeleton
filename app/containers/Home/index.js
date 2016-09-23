@@ -3,16 +3,32 @@ import { connect } from 'react-redux'
 
 import getHeaderTags from 'utilities/getHeaderTags'
 import styles from './styles.css'
+import background from './unsplash.jpeg'
+import heading from './banner.svg'
 
 import Counter from 'components/Counter'
 
 const Home = props => {
   const headerTags = getHeaderTags('Home')
   return (
-    <div className={styles.main}>
+    <div
+      className={styles.main}
+      style={{
+        background: `url(${background})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        backgroundSize: 'cover'
+      }}
+    >
       {headerTags}
-      <h1>Home Page</h1>
-      <Counter />
+      <div>
+        <img
+          src={heading}
+          alt={'heading'}
+          className={styles.heading}
+        />
+        <Counter />
+      </div>
     </div>
   )
 }
