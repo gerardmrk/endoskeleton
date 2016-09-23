@@ -1,16 +1,24 @@
-import React from 'react'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+
 import styles from './styles.css'
-
 import getHeaderTags from 'utilities/getHeaderTags'
+import sleeplessSVG from './sleepless.svg'
 
-const About = () => {
-  const headerTags = getHeaderTags('About')
-  return (
-    <div className={styles.main}>
-      {headerTags}
-      <h1>About Page</h1>
-    </div>
-  )
+class About extends Component {
+  render () {
+    const headerTags = getHeaderTags('About')
+    return (
+      <div className={styles.main}>
+        {headerTags}
+        <div className={styles.auroralNorthern} />
+        <div className={styles.auroralStars} />
+        <img src={sleeplessSVG} alt='a word' />
+      </div>
+    )
+  }
 }
 
-export default About
+const mapStateToProps = (state, localProps) => ({})
+
+export default connect(mapStateToProps, {})(About)

@@ -32,14 +32,33 @@
     "NODE_MODULES": "node_modules",
     "DISTRIBUTION": "dist",
     "CONFIGS": "_config_",
-    "NPM_CONFIG": "package.json"
+    "NPM_CONFIG": "package.json",
+    "DLL_VENDORS": "app/vendors.js"
   },
+  "ALIASES": [
+    ["configs", "CONFIGS"],
+    ["containers", "APP_CONTAINERS"],
+    ["components", "APP_COMPONENTS"],
+    ["routes", "APP_ROUTES"],
+    ["actions", "APP_ACTIONS"],
+    ["reducers", "APP_REDUCERS"],
+    ["store", "APP_STORE"],
+    ["utilities", "APP_UTILITIES"]
+  ],
   "PSEUDO_PATHS": {
-    "RELATIVE_PUBLICPATH": "/assets",
-    "CLIENT_BUNDLE_NAME": "[name].js",
-    "CLIENT_HTML_FILENAME": "index.html",
+    "RELATIVE_PUBLICPATH": "/",
+    "CLIENT_BUNDLE_NAME_DEV": "[name].js",
+    "CLIENT_BUNDLE_NAME_PRO": "[name].[hash].js",
+    "CLIENT_HTML_FILENAME": "index",
+    "CLIENT_HTML_EXT_PRO": ".hbs",
+    "CLIENT_HTML_EXT_DEV": ".html",
     "CLIENT_HTML_FROM_PATHS": "DISTRIBUTION",
-    "CLIENT_HTML_FROM_DISTRIBUTION": "./index.html"
+    "CLIENT_HTML_FROM_DISTRIBUTION": "./index"
+  },
+  "VENDORS": {
+    "ReactGroup": ["react", "react-dom", "react-router", "react-helmet"],
+    "ReduxGroup": ["redux", "redux-logger", "redux-thunk", "react-redux"],
+    "OtherGroup": ["ramda", "immutable"]
   },
   "ROUTES": {
     "Home": {

@@ -2,7 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import getHeaderTags from 'utilities/getHeaderTags'
-
 import styles from './styles.css'
 
 import Counter from 'components/Counter'
@@ -13,18 +12,11 @@ const Home = props => {
     <div className={styles.main}>
       {headerTags}
       <h1>Home Page</h1>
-      <p>cant feel my face</p>
       <Counter />
     </div>
   )
 }
 
-const mapStateToProps = (state, localProps) => {
-  return {
+const mapStateToProps = (state, localProps) => ({})
 
-  }
-}
-
-export default connect(mapStateToProps, {
-
-})(Home)
+export default connect(mapStateToProps, {})(Home)

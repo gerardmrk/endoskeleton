@@ -1,17 +1,15 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Match from 'react-router/Match'
-import Link from 'react-router/Link'
 import Router from 'react-router/BrowserRouter'
 import Helmet from 'react-helmet'
 
 import routes from 'routes'
-
 import styles from './App.css'
-
 import { GENERAL } from 'configs/preferences'
-
 const { APP_NAME, TITLE_FORMAT } = GENERAL
+
+import Header from 'components/Header'
 
 const App = props => (
   <Router>
@@ -20,10 +18,7 @@ const App = props => (
         defaultTitle={APP_NAME}
         titleTemplate={TITLE_FORMAT}
       />
-      <ul role='nav'>
-        <li><Link to='/'>Home</Link></li>
-        <li><Link to='/about'>About</Link></li>
-      </ul>
+      <Header />
       <main className={styles.mainContainer}>
         {routes.map((route, i) => (
           <MatchRecursive key={i} {...route} />
@@ -44,12 +39,6 @@ const MatchRecursive = route => (
   />
 )
 
-const mapStateToProps = (state, localProps) => {
-  return {
+const mapStateToProps = (state, localProps) => ({})
 
-  }
-}
-
-export default connect(mapStateToProps, {
-
-})(App)
+export default connect(mapStateToProps)(App)

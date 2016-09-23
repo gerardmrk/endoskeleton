@@ -1,39 +1,31 @@
-const { readFileSync } = require('fs')
 const { resolve } = require('path')
 
 const Webpack = require('webpack')
 const WebpackDevServer = require('webpack-dev-server')
 const HtmlPlugin = require('html-webpack-plugin')
 
-let PREFS
+const parsePreferences = require('./helpers/parsePreferences')
 
-try {
-  // #@! - static - [START]
-  const rootPath = resolve(__dirname, '..')
-  PREFS = JSON.parse(readFileSync(`${rootPath}/_config_/preferences.json`, 'utf8'))
-  // #@! - static - [END]
+const PREFS = parsePreferences(resolve(__dirname, '..'))
 
-  Object.keys(PREFS.PATHS).forEach(pathname => {
-    const path = PREFS.PATHS[pathname]
-    PREFS.PATHS[pathname] = `${rootPath}/${path}`
-  })
-  PREFS.PATHS['root'] = rootPath
-} catch (err) {
-  console.error(err)
-}
-
-const { GENERAL, PATHS, PSEUDO_PATHS, DEV } = PREFS
+const { GENERAL, PATHS, PSEUDO_PATHS, DEV, ALIASES } = PREFS
 const { HMR_HOST, HMR_PORT } = DEV
 const {
-  CLIENT_BUNDLE_NAME,
+  CLIENT_BUNDLE_NAME_DEV,
   CLIENT_HTML_FILENAME,
+  CLIENT_HTML_EXT_DEV,
   CLIENT_HTML_FROM_PATHS
 } = PSEUDO_PATHS
 
 const HMR_ADDR = `http://${HMR_HOST}:${HMR_PORT}`
 
+const MAPPED_ALIASES = {}
+
+ALIASES.forEach(rel => { MAPPED_ALIASES[rel[0]] = PATHS[rel[1]] })
+
 const config = {
   entry: [
+    'babel-polyfill',
     'react-hot-loader/patch',
     `webpack-dev-server/client?${HMR_ADDR}`,
     'webpack/hot/only-dev-server',
@@ -41,7 +33,8 @@ const config = {
   ],
 
   output: {
-    filename: CLIENT_BUNDLE_NAME,
+    filename: CLIENT_BUNDLE_NAME_DEV,
+    chunkFilename: CLIENT_BUNDLE_NAME_DEV,
     path: PATHS.DISTRIBUTION,
     publicPath: '/'
   },
@@ -59,6 +52,7 @@ const config = {
         exclude: [PATHS.NODE_MODULES],
         loader: 'babel-loader',
         options: {
+          cacheDirectory: true,
           presets: [['es2015', { modules: false }], 'stage-2', 'react'],
           plugins: ['react-hot-loader/babel']
         }
@@ -73,11 +67,12 @@ const config = {
             loader: 'css-loader',
             options: {
               modules: true,
-              importLoaders: 1,
+              importLoaders: 2,
               localIdentName: '[name]__[local]__[hash:base64:7]'
             }
           },
-          { loader: 'postcss-loader' }
+          { loader: 'postcss-loader' },
+          { loader: 'sass-loader' }
         ]
       },
       {
@@ -100,7 +95,8 @@ const config = {
       inject: false,
       favicon: `${PATHS.CONFIGS}/build_assets/favicon.ico`,
       template: `${PATHS.CONFIGS}/templates/index_template.html`,
-      filename: `${PATHS[CLIENT_HTML_FROM_PATHS]}/${CLIENT_HTML_FILENAME}`,
+      filename: `${PATHS[CLIENT_HTML_FROM_PATHS]}/${
+        CLIENT_HTML_FILENAME}${CLIENT_HTML_EXT_DEV}`,
       minify: {
         minifyCSS: true,
         minifyJS: true,
@@ -116,21 +112,14 @@ const config = {
     modules: [PATHS.NODE_MODULES],
     extensions: ['.js', '.jsx', '.json', '.css'],
     enforceExtension: false,
-    alias: {
-      configs: PATHS.CONFIGS,
-      components: PATHS.APP_COMPONENTS,
-      containers: PATHS.APP_CONTAINERS,
-      routes: PATHS.APP_ROUTES,
-      actions: PATHS.APP_ACTIONS,
-      reducers: PATHS.APP_REDUCERS,
-      store: PATHS.APP_STORE,
-      utilities: PATHS.APP_UTILITIES
-    }
+    alias: MAPPED_ALIASES
   },
 
-  devtool: 'inline-source-map',
+  devtool: 'cheap-module-eval-source-map',
 
-  target: 'web'
+  target: 'web',
+
+  cache: true
 }
 
 const server = new WebpackDevServer(Webpack(config), {
