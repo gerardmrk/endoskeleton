@@ -49,10 +49,16 @@ const config = options => {
       '/**/*.js', '/**/*.js', '/**/*.css', '/**/*.gz', '/sourcemaps', '/images', '/fonts'
     ].map(path => `${PATHS.DISTRIBUTION}/${path}`), { root: process.cwd(), verbose: false }),
 
-    new Webpack.optimize.UglifyJsPlugin(Object.assign(options.server ? {} : {
+    // new Webpack.optimize.UglifyJsPlugin(Object.assign(options.server ? {} : {
+    //   compressor: { screw_ie8: true, keep_fnames: true, warnings: false },
+    //   mangle: { screw_ie8: true, keep_fnames: true }
+    // }, { sourceMap: true })),
+
+    new Webpack.optimize.UglifyJsPlugin({
+      sourceMap: true,
       compressor: { screw_ie8: true, keep_fnames: true, warnings: false },
       mangle: { screw_ie8: true, keep_fnames: true }
-    }, { sourceMap: true })),
+    }),
 
     new CompressionPlugin({ asset: '[path].gz', algorithm: 'gzip' }),
 
@@ -87,7 +93,7 @@ const config = options => {
         removeComments: true,
         keepClosingSlash: true,
         preserveLineBreaks: true,
-        collapseWhitespace: true
+        collapseWhitespace: false
       }
     })),
 
@@ -162,8 +168,8 @@ const config = options => {
           include: [PATHS.APP],
           exclude: [PATHS.NODE_MODULES],
           loader: 'babel-loader',
-          options: {
-            presets: ['babili', ['es2015', { modules: false }], 'stage-2', 'react'],
+          query: {
+            presets: [['es2015', { modules: false }], 'stage-2', 'react'],
             plugins: ['transform-runtime']
           }
         },
