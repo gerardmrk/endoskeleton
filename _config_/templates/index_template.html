@@ -23,6 +23,14 @@
     <meta name="twitter:site" content="@<%= htmlWebpackPlugin.options['APP_TWITTER_HANDLE'] %>" />
     <meta name="twitter:creator" content="@<%= htmlWebpackPlugin.options['SELF_TWITTER_HANDLE'] %>" />
 
+    <% if (process.env.NODE_ENV === 'production') { %>
+    {{{Meta}}}
+
+    {{Title}}
+
+    {{{Link}}}
+    <% } %>
+
     <%= require('html!./loadcss.html') %>
 
     <%= require('html!./css_rel_preload.html') %>
@@ -49,7 +57,7 @@
   <body>
     <% if (process.env.NODE_ENV === 'production') { %>
     <div id="app">{{{Body}}}</div>
-    <script>window.__INITIAL_STATE__ = {{{initialState}}}</script>
+    <script>window.__INITIAL_STATE__ = {{{InitialState}}}</script>
     <% } else { %>
     <div id="app"></div>
     <% } %>

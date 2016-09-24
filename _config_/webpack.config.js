@@ -30,83 +30,8 @@ const MAPPED_ALIASES = {}
 
 ALIASES.forEach(rel => { MAPPED_ALIASES[rel[0]] = PATHS[rel[1]] })
 
-const config = env => ({
-  context: process.cwd(),
-
-  target: 'web',
-
-  devtool: 'source-map',
-
-  entry: {
-    vendor: VENDORS['all'],
-    app: ['babel-polyfill', PATHS.APP]
-  },
-
-  output: {
-    path: PATHS.DISTRIBUTION,
-    filename: CLIENT_BUNDLE_NAME_PRO,
-    chunkFilename: CLIENT_BUNDLE_NAME_PRO,
-    sourceMapFilename: 'sourcemaps/[file].map',
-    publicPath: RELATIVE_PUBLICPATH
-  },
-
-  module: {
-    rules: [
-      {
-        test: /\.json$/,
-        exclude: [PATHS.NODE_MODULES],
-        loader: 'json-loader'
-      },
-      {
-        test: /\.jsx?$/,
-        include: [PATHS.APP],
-        exclude: [PATHS.NODE_MODULES],
-        loader: 'babel-loader',
-        options: {
-          presets: [['es2015', { modules: false }], 'stage-2', 'react'],
-          plugins: ['transform-runtime']
-        }
-      },
-      {
-        test: /\.css$/,
-        include: [PATHS.APP],
-        exclude: [PATHS.NODE_MODULES],
-        loaders: ExtractTextPlugin.extract('style?sourceMap', [
-          'css?sourceMap&modules&importLoaders=2&localIdentName=[name]__[local]__[hash:base64:7]',
-          'postcss'
-        ])
-      },
-      {
-        test: /\.(eot|ttf|woff|woff2)(\?v=[0-9]\.[0-9]\.[0-9])$/,
-        include: [PATHS.APP],
-        exclude: [PATHS.NODE_MODULES],
-        loader: 'file-loader',
-        options: {
-          name: 'fonts/[name].[ext]'
-        }
-      },
-      {
-        test: /\.(jpe?g|png|gif|svg)$/i,
-        include: [PATHS.APP],
-        exclude: [PATHS.NODE_MODULES],
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: 12000,
-              hash: 'sha512',
-              name: 'images/[name].[hash].[ext]'
-            }
-          },
-          {
-            loader: 'image-webpack-loader'
-          }
-        ]
-      }
-    ]
-  },
-
-  plugins: [
+const config = options => {
+  let plugins = [
     new Webpack.DefinePlugin({ 'process.env': {
       'NODE_ENV': JSON.stringify('production'),
       'BABEL_ENV': JSON.stringify('production')
@@ -124,21 +49,14 @@ const config = env => ({
       '/**/*.js', '/**/*.js', '/**/*.css', '/**/*.gz', '/sourcemaps', '/images', '/fonts'
     ].map(path => `${PATHS.DISTRIBUTION}/${path}`), { root: process.cwd(), verbose: false }),
 
-    new Webpack.optimize.CommonsChunkPlugin({ names: ['vendor', 'manifest'], minChunks: Infinity }),
-
-    new Webpack.optimize.DedupePlugin(),
-
-    new Webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
+    new Webpack.optimize.UglifyJsPlugin(Object.assign(options.server ? {} : {
       compressor: { screw_ie8: true, keep_fnames: true, warnings: false },
       mangle: { screw_ie8: true, keep_fnames: true }
-    }),
-
-    new Webpack.optimize.AggressiveMergingPlugin({ minSizeReduce: 1.5 }),
+    }, { sourceMap: true })),
 
     new CompressionPlugin({ asset: '[path].gz', algorithm: 'gzip' }),
 
-    new ExtractTextPlugin('stylesheets/[name].[contenthash].css', { allChunks: true }),
+    new ExtractTextPlugin({ filename: 'styles/[name].[contenthash].css', allChunks: true }),
 
     new FaviconsPlugin({
       title: GENERAL.APP_NAME,
@@ -203,14 +121,110 @@ const config = env => ({
         }
       }
     })
-  ],
+  ]
 
-  resolve: {
-    modules: [PATHS.NODE_MODULES],
-    extensions: ['.js', '.jsx', '.json', '.css'],
-    enforceExtension: false,
-    alias: MAPPED_ALIASES
+  if (!options.server) {
+    plugins = plugins.concat([
+      new Webpack.optimize.CommonsChunkPlugin({
+        names: ['vendor', 'manifest'], minChunks: Infinity
+      }),
+      new Webpack.optimize.AggressiveMergingPlugin({ minSizeReduce: 1.5 }),
+      new Webpack.optimize.DedupePlugin()
+    ])
   }
-})
+
+  return {
+    context: process.cwd(),
+    target: 'web',
+    devtool: 'source-map',
+
+    entry: options.server
+    ? { app: ['babel-polyfill', PATHS.APP] }
+    : { vendor: VENDORS['all'], app: ['babel-polyfill', PATHS.APP] },
+
+    output: {
+      path: PATHS.DISTRIBUTION,
+      filename: CLIENT_BUNDLE_NAME_PRO,
+      chunkFilename: CLIENT_BUNDLE_NAME_PRO,
+      sourceMapFilename: 'sourcemaps/[file].map',
+      publicPath: RELATIVE_PUBLICPATH
+    },
+
+    module: {
+      rules: [
+        {
+          test: /\.json$/,
+          exclude: [PATHS.NODE_MODULES],
+          loader: 'json-loader'
+        },
+        {
+          test: /\.jsx?$/,
+          include: [PATHS.APP],
+          exclude: [PATHS.NODE_MODULES],
+          loader: 'babel-loader',
+          options: {
+            presets: ['babili', ['es2015', { modules: false }], 'stage-2', 'react'],
+            plugins: ['transform-runtime']
+          }
+        },
+        {
+          test: /\.css$/,
+          include: [PATHS.APP],
+          exclude: [PATHS.NODE_MODULES],
+          loader: ExtractTextPlugin.extract({
+            fallbackLoader: 'style-loader',
+            loader: [
+              {
+                loader: 'css-loader',
+                query: {
+                  sourceMap: true,
+                  modules: true,
+                  importLoaders: 1,
+                  localIdentName: '[name]__[local]__[hash:base64:7]'
+                }
+              },
+              {
+                loader: 'postcss-loader',
+                query: { sourceMap: true }
+              }
+            ]
+          })
+        },
+        {
+          test: /\.(eot|ttf|woff|woff2)(\?v=[0-9]\.[0-9]\.[0-9])$/,
+          include: [PATHS.APP],
+          exclude: [PATHS.NODE_MODULES],
+          loader: 'file-loader',
+          query: { name: 'fonts/[name].[ext]' }
+        },
+        {
+          test: /\.(jpe?g|png|gif|svg)$/i,
+          include: [PATHS.APP],
+          exclude: [PATHS.NODE_MODULES],
+          use: [
+            {
+              loader: 'url-loader',
+              query: {
+                limit: 20000,
+                hash: 'sha512',
+                name: 'images/[name].[hash].[ext]'
+              }
+            },
+            { loader: 'image-webpack-loader' }
+          ]
+        }
+      ]
+    },
+
+    plugins,
+
+    resolve: {
+      modules: [PATHS.NODE_MODULES],
+      extensions: ['.js', '.jsx', '.json', '.css'],
+      enforceExtension: false,
+      alias: MAPPED_ALIASES
+    }
+  }
+}
 
 module.exports = config

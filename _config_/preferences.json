@@ -29,8 +29,9 @@
     "APP_STORE": "app/store",
     "APP_UTILITIES": "app/utilities",
     "SERVER": "server",
+    "VIEWS": "server/views",
     "NODE_MODULES": "node_modules",
-    "DISTRIBUTION": "dist",
+    "DISTRIBUTION": "server/assets",
     "CONFIGS": "_config_",
     "NPM_CONFIG": "package.json",
     "DLL_VENDORS": "app/vendors.js"
@@ -46,13 +47,13 @@
     ["utilities", "APP_UTILITIES"]
   ],
   "PSEUDO_PATHS": {
-    "RELATIVE_PUBLICPATH": "/",
+    "RELATIVE_PUBLICPATH": "/assets/",
     "CLIENT_BUNDLE_NAME_DEV": "[name].js",
-    "CLIENT_BUNDLE_NAME_PRO": "[name].[hash].js",
+    "CLIENT_BUNDLE_NAME_PRO": "scripts/[name].[hash].js",
     "CLIENT_HTML_FILENAME": "index",
     "CLIENT_HTML_EXT_PRO": ".hbs",
     "CLIENT_HTML_EXT_DEV": ".html",
-    "CLIENT_HTML_FROM_PATHS": "DISTRIBUTION",
+    "CLIENT_HTML_FROM_PATHS": "VIEWS",
     "CLIENT_HTML_FROM_DISTRIBUTION": "./index"
   },
   "VENDORS": {

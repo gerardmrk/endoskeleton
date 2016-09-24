@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import getHeaderTags from 'utilities/getHeaderTags'
 import styles from './styles.css'
 import background from './unsplash.jpeg'
-import heading from './banner.svg'
+import heading from './sleepless.svg'
 
 import Counter from 'components/Counter'
 

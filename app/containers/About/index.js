@@ -22,7 +22,7 @@ class About extends Component {
         {headerTags}
         <div>
           <img src={sleeplessSVG} alt='a word' />
-          <h3>The trick, William Potter, is not minding that it hurts.</h3>
+          <h3>The trick, William Potter, is not minding that it hurts</h3>
         </div>
       </div>
     )

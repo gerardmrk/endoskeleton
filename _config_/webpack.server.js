@@ -56,7 +56,7 @@ const config = {
         include: [PATHS.APP],
         exclude: [PATHS.NODE_MODULES],
         loader: 'babel-loader',
-        options: {
+        query: {
           cacheDirectory: true,
           presets: [['es2015', { modules: false }], 'stage-2', 'react'],
           plugins: ['react-hot-loader/babel']
@@ -84,7 +84,7 @@ const config = {
         include: [PATHS.APP],
         exclude: [PATHS.NODE_MODULES],
         loader: 'file-loader',
-        options: {
+        query: {
           name: 'images/[name].[ext]'
         }
       }
@@ -99,14 +99,14 @@ const config = {
       inject: false,
       favicon: `${PATHS.CONFIGS}/build_assets/favicon.ico`,
       template: `${PATHS.CONFIGS}/templates/index_template.html`,
-      filename: `${PATHS[CLIENT_HTML_FROM_PATHS]}/${
+      filename: `${PATHS['DISTRIBUTION']}/${
         CLIENT_HTML_FILENAME}${CLIENT_HTML_EXT_DEV}`,
       minify: {
         minifyCSS: true,
         minifyJS: true,
         removeComments: true,
         keepClosingSlash: true,
-        preserveLineBreaks: false,
+        preserveLineBreaks: true,
         collapseWhitespace: false
       }
     })),

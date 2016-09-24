@@ -4,36 +4,39 @@ import { Provider } from 'react-redux'
 import { AppContainer } from 'react-hot-loader'
 import thunk from 'redux-thunk'
 
+import renderToString from './serverRender'
 import App from 'containers/App'
 import configureStore from 'store'
 import immutalize from 'utilities/immutalize'
 
-const storeWithMiddleware = configureStore([thunk])
+global.main = renderToString
 
-const stateFromServer = window.__INITIAL_STATE__
+if (typeof window !== undefined) {
+  if (process.env.DEV_STAGE === 'optimize' && process.env.NODE_ENV === 'development') {
+    const { whyDidYouUpdate } = require('why-did-you-update')
+    whyDidYouUpdate(React)
+  }
 
-const initialState = stateFromServer ? immutalize(stateFromServer) : undefined
+  const storeWithMiddleware = configureStore([thunk])
 
-const appStore = storeWithMiddleware(initialState)
+  const stateFromServer = window.__INITIAL_STATE__
 
-if (process.env.DEV_STAGE === 'optimize') {
-  const { whyDidYouUpdate } = require('why-did-you-update')
-  whyDidYouUpdate(React)
-}
+  const initialState = stateFromServer ? immutalize(stateFromServer) : undefined
 
-const render = () => {
-  ReactDOM.render(
-    <AppContainer>
-      <Provider store={appStore}>
-        <App />
-      </Provider>
-    </AppContainer>,
-    document.getElementById('app')
-  )
-}
+  const appStore = storeWithMiddleware(initialState)
 
-render()
+  const render = () => {
+    ReactDOM.render(
+      <AppContainer>
+        <Provider store={appStore}>
+          <App />
+        </Provider>
+      </AppContainer>,
+      document.getElementById('app')
+    )
+  }
 
-if (module.hot) {
-  module.hot.accept('containers/App', render)
+  render()
+
+  if (module.hot) module.hot.accept('containers/App', render)
 }

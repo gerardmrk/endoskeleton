@@ -1,10 +1,9 @@
-import { readFileSync } from 'fs'
 import { createServer } from 'http'
 import { resolve } from 'path'
 
 import Koa from 'koa'
 import Router from 'koa-router'
-import send from 'koa-send'
+import views from 'koa-views'
 import serve from 'koa-static'
 import mount from 'koa-mount'
 import convert from 'koa-convert'
@@ -13,32 +12,31 @@ import compress from 'koa-compress'
 import cors from 'koa-cors'
 import bodyParser from 'koa-bodyparser'
 
-let PREFS
+import React from 'react'
+import { renderToString } from 'react-dom/server'
+import { ServerRouter, createServerRenderContext } from 'react-router'
+import { createStore } from 'redux'
 
-try {
-  // #@! - static - [START]
-  const rootPath = resolve(__dirname, '..')
-  PREFS = JSON.parse(readFileSync(`${rootPath}/_config_/preferences.json`, 'utf8'))
-  // #@! - static - [END]
+import rootReducer from '../app/reducers'
+import App from '../app/containers/App'
 
-  Object.keys(PREFS.PATHS).forEach(pathname => {
-    const path = PREFS.PATHS[pathname]
-    PREFS.PATHS[pathname] = `${rootPath}/${path}`
-  })
-  PREFS.PATHS['root'] = rootPath
-} catch (err) {
-  console.error('Error parsing preferences.json: ', err)
-}
+// #@! - static - [START]
+import parsePreferences from '../_config_/helpers/parsePreferences'
+const PREFS = parsePreferences(resolve(__dirname, '..'))
+// #@! - static - [END]
 
 const { PATHS, PSEUDO_PATHS, DEV } = PREFS
 const { MOCK_HOST, MOCK_PORT } = DEV
+const {
+  CLIENT_HTML_FILENAME,
+  CLIENT_HTML_EXT_PRO,
+  RELATIVE_PUBLICPATH
+} = PSEUDO_PATHS
+
+const CLIENT_FILE = `${CLIENT_HTML_FILENAME}${CLIENT_HTML_EXT_PRO}`
 
 const app = new Koa()
 const router = new Router()
-
-router.get('*', async (ctx, next) => {
-  await send(ctx, 'index.html', { root: PATHS.DIST })
-})
 
 app.use(logger('dev'))
 
@@ -49,13 +47,39 @@ app.use(convert(cors()))
 app.use(bodyParser())
 
 app.use(convert(mount(
-  PSEUDO_PATHS.RELATIVE_PUBLICPATH,
-  serve(PATHS.DIST, { maxage: 7 * Math.pow(10, 8), gzip: true })
+  RELATIVE_PUBLICPATH,
+  serve(PATHS.DISTRIBUTION, { maxage: 7 * Math.pow(10, 8), gzip: true })
 )))
+
+app.use(views(PATHS.VIEWS, { map: { html: 'handlebars' } }))
 
 app.use(router.routes())
 
 app.use(router.allowedMethods())
+
+router.get('*', async (ctx, next) => {
+  const context = createServerRenderContext()
+
+  let markup = renderToString(<ServerRouter location={ctx.url} context={context}><App /></ServerRouter>)
+
+  const result = context.getResult()
+
+  if (result.redirect) {
+    return ctx.redirect(result.redirect.pathname)
+  }
+
+  if (result.missed) {
+    ctx.status = 404
+    markup = renderToString(<ServerRouter location={ctx.url} context={context}><App /></ServerRouter>)
+  }
+
+  const store = createStore(rootReducer, undefined)
+
+  await ctx.render(CLIENT_HTML_FILENAME, {
+    body: markup,
+    initialState: JSON.stringify(store.getState())
+  })
+})
 
 const server = createServer(app.callback())
 
