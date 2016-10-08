@@ -1,0 +1,20 @@
+{
+  "SOURCE": "source",
+  "RENDERER": "source/renderer",
+  "APP": "source/app",
+  "APP_ENTRYPOINT": "source/app/index.js",
+  "APP_CONTAINERS": "source/app/containers",
+  "APP_COMPONENTS": "source/app/components",
+  "APP_ROUTES": "source/app/routes",
+  "APP_ACTIONS": "source/app/actions",
+  "APP_REDUCERS": "source/app/reducers",
+  "APP_STORE": "source/app/store",
+  "APP_UTILITIES": "source/app/utilities",
+  "SERVER": "server",
+  "SERVER_VIEWS": "server/assets/views",
+  "NODE_MODULES": "node_modules",
+  "BUILD_CLIENT": "server/assets",
+  "BUILD_RENDERER": "server",
+  "CONFIGS": ".config",
+  "NPM_CONFIG": "package.json"
+}

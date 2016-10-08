@@ -1,0 +1,18 @@
+{
+  "vendor": [
+    "react",
+    "react-dom",
+    "react-router",
+    "react-helmet",
+    "redux",
+    "redux-logger",
+    "redux-thunk",
+    "react-redux",
+    "immutable",
+    "ramda"
+  ],
+  "app": [
+    "babel-polyfill",
+    ["PATHS", "APP"]
+  ]
+}

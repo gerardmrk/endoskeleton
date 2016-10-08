@@ -1,9 +1,8 @@
-**/*.DS_Store
+**/.DS_Store
+**/*.log
+**/.env
 
 node_modules
 
-**/*.log
-
-dist
-
 server/assets
+server/renderer

@@ -1,0 +1,13 @@
+{
+  "APP_NAME": "Sleepless",
+  "DOMAIN_NAME": "https://sleepless.xyz",
+  "TITLE_FORMAT": "%s - Sleepless",
+  "SOC_IMG_URL": "https://sleepless.xyz/assets/images/dank.png",
+  "SOC_IMG_WIDTH": "300",
+  "SOC_IMG_HEIGHT": "300",
+  "CSP": "default-src 'self' 'unsafe-inline' cdnjs.cloudflare.com maxcdn.bootstrapcdn.com *.googleapis.com *.gstatic.com; img-src 'self' 'unsafe-inline' data:;",
+  "GOOGLE_SC_TOKEN": "EkdURsID0oeb4LeHHoI37QOn4DGLAf9URMz1Vuh4aHg",
+  "FACEBOOK_APP_ID": "1789742834600188",
+  "TWITTER_HDL_APP": "yeahrightlmao",
+  "TWITTER_HDL_SELF": "gerard_mrk"
+}

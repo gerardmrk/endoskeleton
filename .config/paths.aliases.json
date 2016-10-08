@@ -1,0 +1,10 @@
+{
+  "#configs": "CONFIGS",
+  "#containers": "APP_CONTAINERS",
+  "#components": "APP_COMPONENTS",
+  "#routes": "APP_ROUTES",
+  "#actions": "APP_ACTIONS",
+  "#reducers": "APP_REDUCERS",
+  "#store": "APP_STORE",
+  "#utilities": "APP_UTILITIES"
+}

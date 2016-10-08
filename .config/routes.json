@@ -1,0 +1,14 @@
+{
+  "Home": {
+    "title": "Home",
+    "pattern": "/",
+    "exactly": true,
+    "description": "Home Page"
+  },
+  "About": {
+    "title": "About",
+    "pattern": "/about",
+    "exactly": true,
+    "description": "About Page"
+  }
+}

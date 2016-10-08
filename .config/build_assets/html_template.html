@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<% const { files, options } = htmlWebpackPlugin
+const { production, nonlocal, META } = options %>
+<html lang="en">
+  <head>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <% if (production && nonlocal) { %>
+    <meta http-equiv="Content-Security-Policy" content="<%= META['CSP'] %>" />
+    <base href="<%= META['DOMAIN_NAME'] %>" />
+    <% } %>
+    <% if (production) { %><%= '{{{Title}}}' %><% } %>
+    <link href="humans.txt" rel="author" />
+    <% if (production) { %><%= '{{{Link}}}' %><% } %>
+    <meta name="robots" content="index,follow,noodp" />
+    <meta name="googlebot" content="index,follow" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="format-detection" content="email=yes" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="date=no" />
+    <meta name="format-detection" content="address=no" />
+    <meta name="google" content="nositelinkssearchbox" />
+    <meta name="google-site-verification" content="<%= META['GOOGLE_SC_TOKEN'] %>" />
+    <meta property="fb:app_id" content="<%= META['FACEBOOK_APP_ID'] %>" />
+    <meta property="og:site_name" content="<%= META['APP_NAME'] %>" />
+    <meta name="twitter:site" content="<%= `@${META['TWITTER_HDL_APP']}` %>" />
+    <meta name="twitter:creator" content="<%= `@${META['TWITTER_HDL_SELF']}` %>" />
+    <% if (production) { %><%= '{{{Meta}}}' %><% } %>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous" />
+    <% if (production) { %>
+    <%= require('html!./loadcss.html') %>
+    <%= require('html!./css_rel_preload.html') %>
+    <% } %>
+    <%= require('html!./inline_style.html') %>
+    <% if (production) { %>
+    <% files.css.forEach(file => { %><link rel="preload" href="<%= file %>" as="style" onload="this.rel='stylesheet'" /><%= '\n\t\t' %><% }) %>
+    <noscript>
+      <% files.css.forEach(file => { %><link rel="stylesheet" href="<%= file %>" /><%= '\n\t\t\t' %><% }) %>
+    </noscript>
+    <% } %>
+  </head>
+  <body>
+    <% if (production) { %>
+    <div id="app">{{{Body}}}</div><%= '\n\t\t' %><script>window.__INITIAL_STATE__ = {{{InitialState}}}</script>
+    <% } else { %><div id="app"></div><% } %>
+    <% files.js.forEach(file => { %><script src="<%= file %>"></script><%= '\n\t\t' %><% }) %>
+  </body>
+</html>

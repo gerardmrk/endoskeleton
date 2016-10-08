@@ -1,0 +1,17 @@
+{
+  "RELATIVE_PUBLICPATH": "/assets/",
+  "BUNDLE_NAME_HOTRELOAD": "[name].js",
+  "BUNDLE_NAME_CLIENT": "scripts/[name].[hash].js",
+  "BUNDLE_NAME_RENDERER": "renderer/index.js",
+  "BUILD_SOURCEMAPS": "sourcemaps/[file].map",
+  "BUILD_STYLES": "styles/[name].[contenthash].css",
+  "BUILD_GZIP": "[path].gz",
+  "BUILD_ICON_STATS": "stats/iconstats-[hash].json",
+  "BUILD_VISUALIZER_STATS": "stats/stats.html",
+  "INDEXHTML_FILE_NAME": "index",
+  "INDEXHTML_FILE_EXT": ".html",
+  "INDEXHTML_FROM_PATHS": "SERVER_VIEWS",
+  "INDEXHTML_FROM_BUILD_CLIENT": "./index",
+  "BASE_FAVICON_FROM_CFG": "build_assets/favicon.png",
+  "HTML_TEMPLATE_FROM_CFG": "build_assets/html_template.html"
+}
