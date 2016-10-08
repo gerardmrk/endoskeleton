@@ -169,6 +169,8 @@ const config = async options => {
       alias: ALIASES
     },
 
+    plugins,
+
     module: {
       rules: [
         { test: /\.json$/, exclude: [PATHS.NODE_MODULES], loader: 'json-loader' },
@@ -230,9 +232,7 @@ const config = async options => {
           ]
         }
       ]
-    },
-
-    plugins
+    }
   }
 }
 
