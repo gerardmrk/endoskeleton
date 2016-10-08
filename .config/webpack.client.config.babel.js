@@ -34,6 +34,117 @@ const config = async options => {
     HTML_TEMPLATE_FROM_CFG
   } = PSEUDO_PATHS
 
+  let plugins = [
+    new Webpack.DefinePlugin({ 'process.env': {
+      'NODE_ENV': JSON.stringify(options.production ? 'production' : 'development')
+    }}),
+
+    new CleanPlugin([
+      '/**/*.js', '/**/*.js', '/**/*.css', '/**/*.gz', '/sourcemaps', '/images', '/fonts'
+    ].map(path => `${PATHS.BUILD_CLIENT}/${path}`), { root: process.cwd(), verbose: false }),
+
+    new Webpack.optimize.UglifyJsPlugin({
+      sourceMap: true,
+      compressor: { screw_ie8: true, keep_fnames: true, warnings: false },
+      mangle: { screw_ie8: true, keep_fnames: true }
+    }),
+
+    new Webpack.optimize.CommonsChunkPlugin({
+      names: [...Object.keys(ENTRIES).filter(en => en !== 'app'), 'manifest'],
+      minChunks: Infinity
+    }),
+
+    new Webpack.optimize.AggressiveMergingPlugin({ minSizeReduce: 1.5 }),
+
+    new CompressionPlugin({ asset: BUILD_GZIP, algorithm: 'gzip' }),
+
+    new ExtractTextPlugin({ filename: BUILD_STYLES, allChunks: true }),
+
+    new FaviconsPlugin({
+      title: APP_META.APP_NAME,
+      logo: `${PATHS.CONFIGS}/${BASE_FAVICON_FROM_CFG}`,
+      emitStats: false,
+      statsFilename: BUILD_ICON_STATS,
+      persistentCache: true,
+      background: '#ffffff',
+      inject: true,
+      icons: {
+        android: true,
+        appleIcon: true,
+        appleStartup: true,
+        favicons: true,
+        firefox: true,
+        opengraph: true,
+        twitter: true
+      }
+    }),
+
+    new HtmlPlugin({
+      nonlocal: process.env.nonlocal,
+      production: options.production,
+      cache: true,
+      inject: false,
+      template: `${PATHS.CONFIGS}/${HTML_TEMPLATE_FROM_CFG}`,
+      filename: `${PATHS[INDEXHTML_FROM_PATHS]}/${INDEXHTML_FILE_NAME}${INDEXHTML_FILE_EXT}`,
+      minify: {
+        minifyCSS: true,
+        minifyJS: true,
+        removeComments: true,
+        keepClosingSlash: true,
+        preserveLineBreaks: true,
+        collapseWhitespace: true
+      },
+      META: APP_META
+    }),
+
+    new Webpack.LoaderOptionsPlugin({
+      minimize: true,
+      options: {
+        context: process.cwd(),
+        postcss: [precss, postcssMath, rucksack({
+          fallbacks: true,
+          autoprefixer: { browsers: 'last 3 versions' }
+        })],
+        imageWebpackLoader: {
+          bypassOnDebug: false,
+          optimizationLevel: 7,
+          interlaced: true,
+          progressive: true,
+          svgo: {plugins: [
+            { mergePaths: false },
+            { convertTransform: false },
+            { convertShapeToPath: false },
+            { cleanupIDs: false },
+            { collapseGroups: false },
+            { transformsWithOnePath: false },
+            { cleanupNumericValues: false },
+            { convertPathData: false },
+            { moveGroupAttrsToElems: false },
+            { removeTitle: true },
+            { removeDesc: true },
+            { removeMetadata: true }
+          ]}
+        }
+      }
+    })
+  ]
+
+  if (!options.watch) {
+    plugins = plugins.concat([
+      new ProgressBarPlugin({
+        width: 100,
+        clear: false,
+        complete: chalk.bgCyan(' '),
+        format: `${chalk.bold('Building... [')}:bar${chalk.bold('][')}${
+          chalk.bold.magenta(':percent')}${chalk.bold('] - :msg')}`
+      }),
+
+      new VisualizerPlugin({ filename: BUILD_VISUALIZER_STATS }),
+
+      new Webpack.optimize.DedupePlugin()
+    ])
+  }
+
   return {
     context: process.cwd(),
 
@@ -121,112 +232,7 @@ const config = async options => {
       ]
     },
 
-    plugins: [
-      new Webpack.DefinePlugin({ 'process.env': {
-        'NODE_ENV': JSON.stringify(options.production ? 'production' : 'development')
-      }}),
-
-      new ProgressBarPlugin({
-        width: 100,
-        clear: false,
-        complete: chalk.bgCyan(' '),
-        format: `${chalk.bold('Building... [')}:bar${chalk.bold('][')}${
-          chalk.bold.magenta(':percent')}${chalk.bold('] - :msg')}`
-      }),
-
-      new VisualizerPlugin({ filename: BUILD_VISUALIZER_STATS }),
-
-      new CleanPlugin([
-        '/**/*.js', '/**/*.js', '/**/*.css', '/**/*.gz', '/sourcemaps', '/images', '/fonts'
-      ].map(path => `${PATHS.BUILD_CLIENT}/${path}`), { root: process.cwd(), verbose: false }),
-
-      new Webpack.optimize.UglifyJsPlugin({
-        sourceMap: true,
-        compressor: { screw_ie8: true, keep_fnames: true, warnings: false },
-        mangle: { screw_ie8: true, keep_fnames: true }
-      }),
-
-      new Webpack.optimize.CommonsChunkPlugin({
-        names: [...Object.keys(ENTRIES).filter(en => en !== 'app'), 'manifest'],
-        minChunks: Infinity
-      }),
-
-      new Webpack.optimize.AggressiveMergingPlugin({ minSizeReduce: 1.5 }),
-
-      new Webpack.optimize.DedupePlugin(),
-
-      new CompressionPlugin({ asset: BUILD_GZIP, algorithm: 'gzip' }),
-
-      new ExtractTextPlugin({ filename: BUILD_STYLES, allChunks: true }),
-
-      new FaviconsPlugin({
-        title: APP_META.APP_NAME,
-        logo: `${PATHS.CONFIGS}/${BASE_FAVICON_FROM_CFG}`,
-        emitStats: false,
-        statsFilename: BUILD_ICON_STATS,
-        persistentCache: true,
-        background: '#ffffff',
-        inject: true,
-        icons: {
-          android: true,
-          appleIcon: true,
-          appleStartup: true,
-          favicons: true,
-          firefox: true,
-          opengraph: true,
-          twitter: true
-        }
-      }),
-
-      new HtmlPlugin({
-        nonlocal: process.env.nonlocal,
-        production: options.production,
-        cache: true,
-        inject: false,
-        template: `${PATHS.CONFIGS}/${HTML_TEMPLATE_FROM_CFG}`,
-        filename: `${PATHS[INDEXHTML_FROM_PATHS]}/${INDEXHTML_FILE_NAME}${INDEXHTML_FILE_EXT}`,
-        minify: {
-          minifyCSS: true,
-          minifyJS: true,
-          removeComments: true,
-          keepClosingSlash: true,
-          preserveLineBreaks: true,
-          collapseWhitespace: true
-        },
-        META: APP_META
-      }),
-
-      new Webpack.LoaderOptionsPlugin({
-        minimize: true,
-        options: {
-          context: process.cwd(),
-          postcss: [precss, postcssMath, rucksack({
-            fallbacks: true,
-            autoprefixer: { browsers: 'last 3 versions' }
-          })],
-          imageWebpackLoader: {
-            bypassOnDebug: false,
-            optimizationLevel: 7,
-            interlaced: true,
-            progressive: true,
-            svgo: {plugins: [
-              { mergePaths: false },
-              { convertTransform: false },
-              { convertShapeToPath: false },
-              { cleanupIDs: false },
-              { collapseGroups: false },
-              { transformsWithOnePath: false },
-              { cleanupNumericValues: false },
-              { convertPathData: false },
-              { moveGroupAttrsToElems: false },
-              { removeTitle: true },
-              { removeDesc: true },
-              { removeMetadata: true }
-            ]}
-          }
-        }
-      })
-    ]
+    plugins
   }
 }
 

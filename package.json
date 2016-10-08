@@ -6,9 +6,10 @@
   "scripts": {
     "start": "node .",
     "start:dev": "node_modules/.bin/nodemon --config .config/nodemon.json index.js",
-    "build:client": "NODE_ENV=production node_modules/.bin/webpack --config .config/webpack.client.config.babel.js --env.production --profile --bail",
+    "build:client": "NODE_ENV=production node_modules/.bin/webpack --config .config/webpack.client.config.babel.js --env.watch=false --env.production --profile --bail",
+    "build:client:watch": "NODE_ENV=development node_modules/.bin/webpack --config .config/webpack.client.config.babel.js --watch --env.watch --env.production=false --profile --bail",
     "build:renderer": "NODE_ENV=production node_modules/.bin/webpack --config .config/webpack.renderer.config.babel.js --env.production --profile --bail",
-    "build:renderer:watch": "NODE_ENV=development node_modules/.bin/webpack --config .config/webpack.renderer.config.babel.js --watch --env.production --profile --bail",
+    "build:renderer:watch": "NODE_ENV=development node_modules/.bin/webpack --config .config/webpack.renderer.config.babel.js --watch --env.production=false --profile --bail",
     "hotreload": "NODE_ENV=development node .config/webpack.hotreload.config.js"
   },
   "repository": {
