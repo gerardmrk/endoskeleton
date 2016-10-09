@@ -114,7 +114,7 @@ const config = async options => {
 
     plugins: [
       new Webpack.DefinePlugin({ 'process.env': {
-        'NODE_ENV': JSON.stringify(options.production ? 'production' : 'development'),
+        'NODE_ENV': JSON.stringify(options.production !== 'false' ? 'production' : 'development'),
         'RENDERER_HOSTNAME': JSON.stringify(process.env.RENDERER_HOSTNAME),
         'RENDERER_PORT_HTTP': JSON.stringify(process.env.RENDERER_PORT_HTTP)
       }}),

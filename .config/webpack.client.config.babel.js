@@ -1,4 +1,7 @@
 import 'babel-polyfill'
+import dotenv from 'dotenv'
+dotenv.config({ path: './.config/.env' })
+
 import { resolve } from 'path'
 
 import Webpack from 'webpack'
@@ -36,7 +39,7 @@ const config = async options => {
 
   let plugins = [
     new Webpack.DefinePlugin({ 'process.env': {
-      'NODE_ENV': JSON.stringify(options.production ? 'production' : 'development')
+      'NODE_ENV': JSON.stringify(options.production !== 'false' ? 'production' : 'development')
     }}),
 
     new CleanPlugin([
@@ -80,8 +83,8 @@ const config = async options => {
     }),
 
     new HtmlPlugin({
-      nonlocal: process.env.nonlocal,
-      production: options.production,
+      nonlocal: process.env.NON_LOCAL === 'true',
+      production: options.production !== 'false',
       cache: true,
       inject: false,
       template: `${PATHS.CONFIGS}/${HTML_TEMPLATE_FROM_CFG}`,
@@ -129,7 +132,7 @@ const config = async options => {
     })
   ]
 
-  if (!options.watch) {
+  if (options.watch === 'false') {
     plugins = plugins.concat([
       new ProgressBarPlugin({
         width: 100,
